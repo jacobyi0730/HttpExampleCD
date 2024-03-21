@@ -6,6 +6,7 @@
 #include "HttpGameModeBase.h"
 #include "HttpModule.h"
 #include "HttpUI.h"
+#include "MyJsonLibrary.h"
 #include "Interfaces/IHttpResponse.h"
 
 // Sets default values
@@ -35,9 +36,14 @@ void AHttpActor::Tick(float DeltaTime)
 void AHttpActor::ReqData(const FString& url)
 {
 	// 웹서버(url)에 정보를 요청하고싶다.
+	//int a;
+	//auto va = a;   // 값 타입
+	//auto& ra = a;  // 레퍼런스 타입
+	//auto* pa = &a; // 포인터 타입
+
 
 	// 1. HttpModule를 가져오고
-	FHttpModule& httpModule = FHttpModule::Get();
+	auto& httpModule = FHttpModule::Get();
 	// 2. 요청 객체를 생성하고
 	TSharedPtr<IHttpRequest> req = httpModule.CreateRequest();
 	// 3. 요청 객체에 요청할 값을 설정하고
@@ -58,8 +64,9 @@ void AHttpActor::ResData(FHttpRequestPtr Request,FHttpResponsePtr Response, bool
 	// 만약 통신이 성공했다면
 	if (bConnectedSuccessfully)
 	{
+		FString json = UMyJsonLibrary::JsonParse( Response->GetContentAsString() );
 		// 응답의 결과를 ui에 보내고싶다.
-		gm->httpUI->SetJson( Response->GetContentAsString());
+		gm->httpUI->SetJson( json );
 	}
 	else
 	{
