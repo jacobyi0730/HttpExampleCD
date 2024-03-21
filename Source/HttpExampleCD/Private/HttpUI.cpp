@@ -19,9 +19,10 @@ void UHttpUI::NativeConstruct()
 
 void UHttpUI::OnMySend()
 {
-	page = page.Replace( TEXT( "[PAGE_NO]" ), *edit_pageNo->GetText().ToString() );
-	page = page.Replace( TEXT( "[ROW]" ) , *edit_row->GetText().ToString() );
-	FString fullURL = FString::Printf(TEXT("%s%s%s"), *url,  *serviceKey, *page );
+	FString tempPage = page.Replace( TEXT( "[PAGE_NO]" ), *edit_pageNo->GetText().ToString() );
+	tempPage = tempPage.Replace( TEXT( "[ROW]" ) , *edit_row->GetText().ToString() );
+	FString fullURL = FString::Printf(TEXT("%s%s%s"), *url,  *serviceKey, *tempPage );
+	UE_LOG( LogTemp , Warning , TEXT( "url : %s" ) , *fullURL );
 	gm->httpActor->ReqData( fullURL );
 }
 
