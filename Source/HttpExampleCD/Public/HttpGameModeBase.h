@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -20,9 +20,13 @@ public:
 
 	virtual void BeginPlay() override;
 
-	// �¾ �� WBP_HttpUI�� �����ؼ� ȭ�鿡 ���̰��ϰ��ʹ�.
+	// 태어날 때 WBP_HttpUI를 생성해서 화면에 보이게하고싶다.
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UUserWidget> httpUIFactory;
 
 	class UHttpUI* httpUI;
+
+	// 태어날 때 통신을 주고받을 주체인 액터를 만들고싶다.
+	UPROPERTY()
+	class AHttpActor* httpActor;
 };

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -18,12 +18,15 @@ class HTTPEXAMPLECD_API UHttpUI : public UUserWidget
 public:
 	virtual  void NativeConstruct() override;
 
+	UPROPERTY()
+	class AHttpGameModeBase* gm;
+
 
 	FString url = "https://apis.data.go.kr/5050000/cafeInfoService/getCafeInfo?serviceKey=";
 
 	FString serviceKey = "xtHbWpFpd5Q8eg13ynvmWGNTHfXjZHZlCa%2B9%2F%2FsCC9AbMIBbA2FHhw%2BElWfKfq7uFEjS%2F21nuDn%2BvWl569cMnQ%3D%3D";
 
-	FString page = "&pageNo=1&numOfRows=4";
+	FString page = "&pageNo=[PAGE_NO]&numOfRows=[ROW]";
 
 	UPROPERTY(EditDefaultsOnly, meta=(BindWidget))
 	class UEditableText* edit_pageNo;
