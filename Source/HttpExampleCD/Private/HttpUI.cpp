@@ -15,6 +15,7 @@ void UHttpUI::NativeConstruct()
 
 	gm = Cast<AHttpGameModeBase>(GetWorld()->GetAuthGameMode());
 	btn_send->OnClicked.AddDynamic( this , &UHttpUI::OnMySend );
+	btn_sendPost->OnClicked.AddDynamic( this , &UHttpUI::OnMySendPost );
 }
 
 void UHttpUI::OnMySend()
@@ -29,4 +30,15 @@ void UHttpUI::OnMySend()
 void UHttpUI::SetJson(FString str)
 {
 	txt_json->SetText(FText::FromString(str));
+}
+
+void UHttpUI::OnMySendPost()
+{
+	FString fullURL = "";
+	gm->httpActor->ReqDataPost( fullURL );
+}
+
+void UHttpUI::SetJsonFromPost(FString str)
+{
+	txt_json->SetText( FText::FromString( str ) );
 }

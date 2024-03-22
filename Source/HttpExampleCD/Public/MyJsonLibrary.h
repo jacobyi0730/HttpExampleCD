@@ -16,7 +16,9 @@ class HTTPEXAMPLECD_API UMyJsonLibrary : public UBlueprintFunctionLibrary
 
 public:
 
-	static FString JsonParse(const FString& data );
+	static FString JsonParse( const FString& data );
+
+	static FString MapToJson( const TMap<FString , FString>& map );
 
 	
 };

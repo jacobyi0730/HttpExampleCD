@@ -23,6 +23,14 @@ void AHttpActor::BeginPlay()
 	Super::BeginPlay();
 
 	gm = Cast<AHttpGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	//TMap<FString , FString> myData;
+	//myData.Add( TEXT( "name" ) , TEXT( "Jacob" ) );
+	//myData.Add( TEXT( "asset" ) , TEXT( "100억" ) );
+	//myData.Add( TEXT( "car" ) , TEXT( "포르셰" ) );
+	//FString sendJson = UMyJsonLibrary::MapToJson( myData );
+
+	//UE_LOG( LogTemp , Warning , TEXT( "%s" ) , *sendJson );
 	
 }
 
@@ -70,7 +78,54 @@ void AHttpActor::ResData(FHttpRequestPtr Request,FHttpResponsePtr Response, bool
 	}
 	else
 	{
-		UE_LOG( LogTemp , Warning , TEXT( "Response Failed... %d" ), Response->GetResponseCode() );
+		if (Request->GetStatus() == EHttpRequestStatus::Succeeded)
+		{
+			UE_LOG( LogTemp , Warning , TEXT( "Response Failed... %d" ) , Response->GetResponseCode() );
+		}
+	}
+}
+
+void AHttpActor::ReqDataPost(const FString& url)
+{
+	TMap<FString , FString> myData;
+	myData.Add( TEXT( "name" ) , TEXT( "Jacob" ) );
+	myData.Add( TEXT( "asset" ) , TEXT( "100억" ) );
+	myData.Add( TEXT( "car" ) , TEXT( "포르셰" ) );
+	FString sendJson = UMyJsonLibrary::MapToJson( myData );
+
+	// FHTTPModule 객체를 가져오고싶다.
+	auto& httpModule = FHttpModule::Get();
+	// UHttpRequest 객체를 만들고싶다.
+	TSharedRef<IHttpRequest> req = httpModule.CreateRequest();
+
+	// URL설정
+	req->SetURL( url );
+	// Verb설정 (POST)
+	req->SetVerb( TEXT("POST") );
+	// Header설정
+	req->SetHeader( TEXT( "Content-Type" ) , TEXT( "application/json" ) );
+	// 보낼 정보(Content)를 담기
+	req->SetContentAsString( sendJson );
+	// 응답함수 등록
+	req->OnProcessRequestComplete().BindUObject( this , &AHttpActor::ResDataPost );
+	// 요청실행
+	req->ProcessRequest();
+}
+
+void AHttpActor::ResDataPost(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully)
+{
+	if (bConnectedSuccessfully)
+	{
+		FString json = UMyJsonLibrary::JsonParse( Response->GetContentAsString() );
+		// 응답의 결과를 ui에 보내고싶다.
+		gm->httpUI->SetJsonFromPost( json );
+	}
+	else
+	{
+		if (Request->GetStatus() == EHttpRequestStatus::Succeeded)
+		{
+			UE_LOG( LogTemp , Warning , TEXT( "Response Failed... %d" ) , Response->GetResponseCode() );
+		}
 	}
 }
 

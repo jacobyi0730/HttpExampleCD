@@ -44,4 +44,13 @@ public:
 	void OnMySend();
 
 	void SetJson(FString str);
+
+	UPROPERTY( EditDefaultsOnly , meta = (BindWidget) )
+	class UButton* btn_sendPost;
+
+	UFUNCTION()
+	void OnMySendPost();
+
+	void SetJsonFromPost( FString str );
+
 };

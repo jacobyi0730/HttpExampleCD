@@ -39,3 +39,23 @@ FString UMyJsonLibrary::JsonParse(const FString& data)
 
 	return json;
 }
+
+FString UMyJsonLibrary::MapToJson(const TMap<FString, FString>& map)
+{
+	// JsonObject를 생성
+	TSharedPtr<FJsonObject> jsonObj = MakeShareable( new FJsonObject );
+	// map의 내용을 JsonObject에 모두 담는다.
+	for (auto& pair : map)
+	{
+		jsonObj->SetStringField( pair.Key , pair.Value );
+	}
+
+	// JsonObject를 Serialize 하고싶다.
+	FString jsonData;
+
+	auto writer = TJsonWriterFactory<TCHAR>::Create( &jsonData );
+	FJsonSerializer::Serialize( jsonObj.ToSharedRef() , writer );
+
+	// 그것을 반환 하고싶다.
+	return jsonData;
+}

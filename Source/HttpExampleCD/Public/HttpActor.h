@@ -31,4 +31,8 @@ public:
 
 	void ResData( FHttpRequestPtr Request ,  FHttpResponsePtr Response , bool bConnectedSuccessfully );
 
+
+	void ReqDataPost( const FString& url );
+
+	void ResDataPost( FHttpRequestPtr Request , FHttpResponsePtr Response , bool bConnectedSuccessfully );
 };
