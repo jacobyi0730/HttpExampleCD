@@ -116,9 +116,8 @@ void AHttpActor::ResDataPost(FHttpRequestPtr Request, FHttpResponsePtr Response,
 {
 	if (bConnectedSuccessfully)
 	{
-		FString json = UMyJsonLibrary::JsonParse( Response->GetContentAsString() );
 		// 응답의 결과를 ui에 보내고싶다.
-		gm->httpUI->SetJsonFromPost( json );
+		gm->httpUI->SetJsonFromPost( Response->GetContentAsString() );
 	}
 	else
 	{

@@ -34,7 +34,7 @@ void UHttpUI::SetJson(FString str)
 
 void UHttpUI::OnMySendPost()
 {
-	FString fullURL = "";
+	FString fullURL = "http://127.0.0.1:5000/test";
 	gm->httpActor->ReqDataPost( fullURL );
 }
 
