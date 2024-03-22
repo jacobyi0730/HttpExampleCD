@@ -59,3 +59,26 @@ FString UMyJsonLibrary::MapToJson(const TMap<FString, FString>& map)
 	// 그것을 반환 하고싶다.
 	return jsonData;
 }
+
+bool UMyJsonLibrary::SaveJson(const FString& filename, const FString& json)
+{
+	// 만약 지정된 폴더가 없으면 해당 폴더를 만든다.
+	// 파일매니저를 가져오고싶다.
+	FPlatformFileManager& fileManager = FPlatformFileManager::Get();
+	IPlatformFile& platformFile = fileManager.GetPlatformFile();
+
+	FString directoryPath = FPaths::ProjectContentDir() + "/jsonData";
+	if (false == platformFile.DirectoryExists( *directoryPath ))
+	{
+		platformFile.CreateDirectory( *directoryPath );
+	}
+
+	// json문자열을 파일로 저장한다.
+	FString filePath = directoryPath + "/" + filename;
+	bool bResult = FFileHelper::SaveStringToFile( json, *filePath );
+	if (false == bResult)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UMyJsonLibrary::SaveJson Failed...T,.T "));
+	}
+	return bResult;
+}

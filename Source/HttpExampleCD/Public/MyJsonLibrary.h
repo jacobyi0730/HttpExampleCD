@@ -20,5 +20,5 @@ public:
 
 	static FString MapToJson( const TMap<FString , FString>& map );
 
-	
+	static bool SaveJson( const FString& filename, const FString& json );
 };

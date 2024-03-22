@@ -28,11 +28,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void ReqData(const FString& url );
-
 	void ResData( FHttpRequestPtr Request ,  FHttpResponsePtr Response , bool bConnectedSuccessfully );
 
-
 	void ReqDataPost( const FString& url );
-
 	void ResDataPost( FHttpRequestPtr Request , FHttpResponsePtr Response , bool bConnectedSuccessfully );
+
+	void ReqWebImage( const FString& url );
+	void ResWebImage( FHttpRequestPtr Request , FHttpResponsePtr Response , bool bConnectedSuccessfully );
 };

@@ -53,4 +53,16 @@ public:
 
 	void SetJsonFromPost( FString str );
 
+
+	UPROPERTY( EditDefaultsOnly , meta = (BindWidget) )
+	class UButton* btn_getWebImage;
+
+	UPROPERTY( EditDefaultsOnly , meta = (BindWidget) )
+	class UImage* Image_web;
+
+	UFUNCTION()
+	void OnMyGetWebImage();
+
+	void SetWebImage(class UTexture2D* texture );
+
 };

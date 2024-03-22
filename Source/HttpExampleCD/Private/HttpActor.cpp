@@ -6,6 +6,7 @@
 #include "HttpGameModeBase.h"
 #include "HttpModule.h"
 #include "HttpUI.h"
+#include "ImageUtils.h"
 #include "MyJsonLibrary.h"
 #include "Interfaces/IHttpResponse.h"
 
@@ -116,8 +117,11 @@ void AHttpActor::ResDataPost(FHttpRequestPtr Request, FHttpResponsePtr Response,
 {
 	if (bConnectedSuccessfully)
 	{
+		// 넘어온 문자열을 저장하고싶다.
+		FString result = Response->GetContentAsString();
+		UMyJsonLibrary::SaveJson( TEXT("SaveMyData.txt"), result );
 		// 응답의 결과를 ui에 보내고싶다.
-		gm->httpUI->SetJsonFromPost( Response->GetContentAsString() );
+		gm->httpUI->SetJsonFromPost( result );
 	}
 	else
 	{
@@ -125,6 +129,42 @@ void AHttpActor::ResDataPost(FHttpRequestPtr Request, FHttpResponsePtr Response,
 		{
 			UE_LOG( LogTemp , Warning , TEXT( "Response Failed... %d" ) , Response->GetResponseCode() );
 		}
+	}
+}
+
+void AHttpActor::ReqWebImage(const FString& url)
+{
+	// Get방식으로 이미지를 다운로드 요청하고싶다.
+	// 1. HttpModule를 가져오고
+	// 2. 요청 객체를 생성하고
+	TSharedPtr<IHttpRequest> req = FHttpModule::Get().CreateRequest();
+	// 3. 요청 객체에 요청할 값을 설정하고
+	//  3.1 어디에 보낼것인가?
+	req->SetURL( url );
+	//  3.2 어떻게 보낼것인가?? GET / POST
+	req->SetVerb( TEXT( "GET" ) );
+	//  3.3 어떤 Content-Type으로 할것인가?
+	req->SetHeader( TEXT( "Content-Type" ) , TEXT( "image/jpeg" ) );
+	// 4. 요청 객체에게 서버에서 응답이 오면 알려달라고 내함수를 등록하고싶다.
+	req->OnProcessRequestComplete().BindUObject( this , &AHttpActor::ResWebImage );
+	// 5. 요청 객체에게 요청하라고 한다.
+	req->ProcessRequest();
+}
+
+void AHttpActor::ResWebImage(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully)
+{
+	if (bConnectedSuccessfully)
+	{
+		// 바이트배열에 응답받은 콘텐츠를 가져오고싶다.
+		TArray<uint8> buf = Response->GetContent();
+		// 저장할 이미지의 경로를 정하고싶다.
+		FString imgPath = FPaths::ProjectPersistentDownloadDir() + "/DownloadWebImage.jpeg";
+		// FFileHelper의 Save함수를 통해 파일로 저장한다.
+		FFileHelper::SaveArrayToFile( buf , *imgPath );
+		// 바이트배열을 이미지로 변환한다.
+		UTexture2D* texture = FImageUtils::ImportBufferAsTexture2D( buf );
+		// 그 이미지를 UI에 적용한다.
+		gm->httpUI->SetWebImage( texture );
 	}
 }
 
